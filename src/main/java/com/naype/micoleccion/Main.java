@@ -1,3 +1,5 @@
+package com.naype.micoleccion;
+
 public class Main {
     public static void main(String[] args) {
         MiColeccion<String> coleccion = new MiColeccion<>(2);

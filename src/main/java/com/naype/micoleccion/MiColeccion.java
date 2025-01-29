@@ -1,3 +1,5 @@
+package com.naype.micoleccion;
+
 public class MiColeccion<T> {
 
     private T[] datos  = null;

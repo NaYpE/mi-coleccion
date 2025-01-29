@@ -1,5 +1,7 @@
 # Mi Colección
 
+![CI Pipeline](https://github.com/tu-usuario/mi-coleccion/actions/workflows/ci.yml/badge.svg)
+
 Este proyecto es una implementación de una colección dinámica en Java. Permite agregar, eliminar, buscar y obtener elementos de manera eficiente.
 
 ## Características principales
@@ -16,4 +18,4 @@ Este proyecto es una implementación de una colección dinámica en Java. Permit
 Para ejecutar las pruebas unitarias, usa el siguiente comando:
 ```bash
 javac -cp .:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar src/*.java test/*.java
-java -cp .:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar org.junit.runner.JUnitCore MiColeccionTest
+
