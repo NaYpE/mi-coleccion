@@ -14,20 +14,27 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '21'
+          java-version: '22'
           distribution: 'temurin'
-          cache: maven  # Habilita caché para acelerar builds
 
       - name: Build and test with Maven
-        run: mvn clean verify
+        run: mvn test jacoco:report
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
+      - name: Extract coverage percentage
+        run: ./scripts/extract-coverage.sh
+
+      - name: Generate coverage badge
+        run: |
+          COVERAGE=$(cat coverage.txt)
+          curl -o coverage.svg "https://img.shields.io/badge/coverage-$COVERAGE%25-brightgreen"
+
+      - name: Upload coverage badge
+        uses: actions/upload-artifact@v3
         with:
-          name: jacoco-coverage-report
-          path: target/site/jacoco/
+          name: coverage-badge
+          path: coverage.svg

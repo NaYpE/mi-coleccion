@@ -2,6 +2,8 @@
 
 [![CI Pipeline](https://github.com/NaYpE/mi-coleccion/actions/workflows/ci.yml/badge.svg)](https://github.com/NaYpE/mi-coleccion/actions/workflows/ci.yml)
 
+![Cobertura](https://raw.githubusercontent.com/NaYpE/mi-coleccion/main/docs/coverage.svg)
+
 Este proyecto es una implementación de una colección dinámica en Java. Permite agregar, eliminar, buscar y obtener elementos de manera eficiente.
 
 ## Características principales
