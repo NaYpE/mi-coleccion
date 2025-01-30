@@ -1,17 +1,40 @@
 #!/bin/bash
 
-# Extraer el porcentaje de cobertura del archivo jacoco.xml
-COVERAGE=$(grep -oP '(?<=<counter type="LINE" missed=")[^"]*' target/site/jacoco/jacoco.xml)
-TOTAL=$(grep -oP '(?<=<counter type="LINE" covered=")[^"]*' target/site/jacoco/jacoco.xml)
+# Ruta al archivo jacoco.xml
+JACOCO_FILE="target/site/jacoco/jacoco.xml"
 
-# Calcular el porcentaje de cobertura
-if [ -z "$COVERAGE" ] || [ -z "$TOTAL" ]; then
-  echo "No se pudo extraer la cobertura."
+# Verificar que el archivo existe
+if [ ! -f "$JACOCO_FILE" ]; then
+  echo "❌ Error: El archivo jacoco.xml no existe en $JACOCO_FILE."
+  echo "Asegúrate de ejecutar 'mvn test jacoco:report' para generar el informe de cobertura."
   exit 1
 fi
 
-PERCENTAGE=$(echo "scale=2; 100 * $TOTAL / ($TOTAL + $COVERAGE)" | bc)
-echo "Cobertura: $PERCENTAGE%"
+# Extraer los valores de missed y covered
+MISSED=$(grep -o '<counter type="LINE" missed="[0-9]*" covered="[0-9]*"/>' "$JACOCO_FILE" | awk -F'"' '{missed+=$4} END {print missed}')
+COVERED=$(grep -o '<counter type="LINE" missed="[0-9]*" covered="[0-9]*"/>' "$JACOCO_FILE" | awk -F'"' '{covered+=$8} END {print covered}')
 
-# Guardar el porcentaje en un archivo para usarlo en el badge
-echo $PERCENTAGE > coverage.txt
+# Verificar que se extrajeron los valores
+if [ -z "$MISSED" ] || [ -z "$COVERED" ]; then
+  echo "❌ Error: No se pudo extraer la cobertura del archivo jacoco.xml."
+  echo "Asegúrate de que el archivo tenga el formato correcto."
+  exit 1
+fi
+
+# Calcular el total de líneas
+TOTAL=$((MISSED + COVERED))
+
+# Evitar división por 0
+if [[ "$TOTAL" -eq 0 ]]; then
+  echo "❌ Error: No hay líneas totales para calcular cobertura."
+  exit 1
+fi
+
+# Calcular el porcentaje usando awk
+PERCENTAGE=$(awk "BEGIN { printf \"%.2f\", (100 * $COVERED / $TOTAL) }")
+
+# Mostrar resultados
+echo "MISSED=$MISSED"
+echo "COVERED=$COVERED"
+echo "TOTAL=$TOTAL"
+echo "✅ Cobertura Total: $PERCENTAGE%"

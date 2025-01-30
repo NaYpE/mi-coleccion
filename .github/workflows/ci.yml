@@ -23,15 +23,10 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and test with Maven
-        run: |
-          mvn clean verify
-          mvn test jacoco:report
+        run: mvn test jacoco:report
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: jacoco-coverage-report
-          path: target/site/jacoco/
+      - name: Give execute permission to script
+        run: chmod +x scripts/extract-coverage.sh
 
       - name: Extract coverage percentage
         run: ./scripts/extract-coverage.sh
