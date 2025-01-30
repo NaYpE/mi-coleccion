@@ -2,6 +2,7 @@ package com.naype.micoleccion;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class MiColeccionTest {
 
@@ -54,5 +55,13 @@ public class MiColeccionTest {
     public void testObtenerFueraDeLimites() {
         MiColeccion<String> coleccion = new MiColeccion<>(2);
         coleccion.obtener(10);  // Esto debería lanzar una excepción
+    }
+
+    @Test
+    public void testToString() {
+        MiColeccion<String> coleccion = new MiColeccion<>(2);
+        coleccion.agregar("Hola");
+        coleccion.agregar("Mundo");
+        assertNotNull(coleccion.toString());
     }
 }
