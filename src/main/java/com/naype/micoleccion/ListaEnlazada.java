@@ -1,80 +1,122 @@
 package com.naype.micoleccion;
 
-public class ListaEnlazada <T>{
+/**
+ * Clase que implementa una lista enlazada genérica.
+ * Permite agregar, buscar y eliminar elementos.
+ */
+public class ListaEnlazada<T> {
     // Referencia al primer nodo de la lista
     private Nodo<T> primer = null;
 
-    public void agregarAlFinal(T valor){
-        // Creamos un nuevo nodo
-        Nodo<T> nuevo = new Nodo<T>();
-        nuevo.setReferencia(null);
+    /**
+     * Agrega un nuevo elemento al final de la lista.
+     * @param valor El valor que se añadirá a la lista.
+     */
+    public void agregarAlFinal(T valor) {
+        // Creamos un nuevo nodo con el valor proporcionado
+        Nodo<T> nuevo = new Nodo<>();
         nuevo.setInfo(valor);
 
-        // Si la lista aun no tiene elementos...
-        if (primer == null){
-            // El nuevo nodo será el primero
+        // Si la lista está vacía, el nuevo nodo será el primero
+        if (primer == null) {
             primer = nuevo;
             return;
         }
 
-        // Creamos un nodo auxiliar
-        Nodo<T> aux;
-        // Recorremos hasta que aux apunte al ultimo nodo
-        for(aux = primer; aux.getReferencia() != null; aux=aux.getReferencia());
+        // Recorremos la lista hasta encontrar el último nodo
+        Nodo<T> aux = primer;
+        while (aux.getReferencia() != null) {
+            aux = aux.getReferencia();
+        }
 
-        // Enlazamos el nuevo nodo como siguiente del ultimo
+        // Enlazamos el nuevo nodo al final de la lista
         aux.setReferencia(nuevo);
     }
 
-    public void agregarAlPrincipio(T valor){
-        Nodo<T> nuevo = new Nodo<T>();
-        nuevo.setReferencia(primer);
+    /**
+     * Agrega un nuevo elemento al inicio de la lista.
+     * @param valor El valor que se añadirá al principio de la lista.
+     */
+    public void agregarAlPrincipio(T valor) {
+        // Creamos un nuevo nodo con el valor proporcionado
+        Nodo<T> nuevo = new Nodo<>();
         nuevo.setInfo(valor);
+
+        // El nuevo nodo apuntará al primer nodo actual
+        nuevo.setReferencia(primer);
+
+        // Ahora el nuevo nodo se convierte en el primero de la lista
         primer = nuevo;
     }
 
-    public Nodo<T> buscar(T valor){
+    /**
+     * Busca un nodo que contenga el valor especificado.
+     * @param valor El valor a buscar en la lista.
+     * @return El nodo que contiene el valor o null si no se encuentra.
+     */
+    public Nodo<T> buscar(T valor) {
         Nodo<T> aux = primer;
-        while(aux != null && !aux.getInfo().equals(valor)){
+
+        // Recorremos la lista hasta encontrar el valor o llegar al final
+        while (aux != null) {
+            if (aux.getInfo().equals(valor)) {
+                return aux; // Retornamos el nodo encontrado
+            }
             aux = aux.getReferencia();
         }
-        return aux;
+
+        return null; // Retornamos null si el valor no está en la lista
     }
 
-    public Nodo<T> eliminar(T valor){
+    /**
+     * Elimina un nodo que contenga el valor especificado.
+     * @param valor El valor del nodo que se desea eliminar.
+     * @return El nodo eliminado o null si el valor no existe en la lista.
+     */
+    public Nodo<T> eliminar(T valor) {
         Nodo<T> actual = primer;
         Nodo<T> anterior = null;
 
-        // Buscamos el nodo
-        while (actual != null && !actual.getInfo().equals(valor)){
+        // Buscamos el nodo que contiene el valor especificado
+        while (actual != null && !actual.getInfo().equals(valor)) {
             anterior = actual;
             actual = actual.getReferencia();
         }
 
-        // Encontrado al principio
-        if(actual != null && anterior == null){
-            Nodo<T> ret = actual;
-            primer = actual.getReferencia();
-            return ret;
+        // Si el nodo no fue encontrado, retornamos null
+        if (actual == null) {
+            return null;
         }
 
-        // Encontrado en otra posicion
-        if(actual != null && anterior != null){
-            Nodo<T> ret = actual;
+        // Si el nodo a eliminar es el primero de la lista
+        if (anterior == null) {
+            primer = actual.getReferencia(); // Eliminamos el primer nodo
+        } else {
+            // Si el nodo está en el medio o al final, ajustamos referencias
             anterior.setReferencia(actual.getReferencia());
-            return ret;
         }
-        return null;
+
+        return actual; // Retornamos el nodo eliminado
     }
 
+    /**
+     * Retorna una representación en cadena de la lista enlazada.
+     * @return Una cadena con los elementos de la lista separados por comas.
+     */
     @Override
-    public String toString(){
-        String x = "";
+    public String toString() {
+        StringBuilder resultado = new StringBuilder();
         Nodo<T> aux = primer;
-        while(aux != null){
-            x += "" + aux.getInfo() + (aux.getReferencia() != null ? ", ": "");
+
+        // Recorremos la lista y agregamos cada valor al resultado
+        while (aux != null) {
+            resultado.append(aux.getInfo());
+            if (aux.getReferencia() != null) {
+                resultado.append(", ");
+            }
             aux = aux.getReferencia();
         }
-        return x;
+
+        return resultado.toString(); // Retornamos la representación de la lista
     }
 }
